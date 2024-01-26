@@ -8,7 +8,6 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// LastFmResponse represents the structure of the response from Last.fm API
 type LastFmResponse struct {
 	Tracks struct {
 		Track []struct {
@@ -51,7 +50,7 @@ func HandleGetTopTracks(w http.ResponseWriter, r *http.Request) {
 	location := r.URL.Query().Get("location")
 	country := r.URL.Query().Get("country")
 
-	// Call Last.fm API
+	// calling the api
 	url := fmt.Sprintf("https://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=%s&location=%s&api_key=79d7732491b5ef4534fa5b90c5d27bc7&format=json", country, location)
 	response, err := http.Get(url)
 	if err != nil {
@@ -60,7 +59,6 @@ func HandleGetTopTracks(w http.ResponseWriter, r *http.Request) {
 	}
 	defer response.Body.Close()
 
-	// Decode JSON response
 	var lastFmResponse LastFmResponse
 	err = json.NewDecoder(response.Body).Decode(&lastFmResponse)
 	if err != nil {
@@ -68,27 +66,17 @@ func HandleGetTopTracks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Send JSON response back to the user
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(lastFmResponse)
 }
 
-// @title Your API Title
-// @version 1.0
-// @description Your API description
-// @termsOfService Your API terms of service
-// @host localhost:8080
-// @BasePath /v1
 func main() {
-	// Register HTTP handlers
 	http.HandleFunc("/toptracks", HandleGetTopTracks)
 
-	// Serve Swagger UI
 	http.Handle("/swagger/", httpSwagger.Handler(
-		httpSwagger.URL("/swagger/doc.json"), // The URL pointing to API definition
+		httpSwagger.URL("/swagger/doc.json"),
 	))
 
-	// Start HTTP server
 	fmt.Println("Server listening on port 8080...")
 	http.ListenAndServe(":8080", nil)
 }
