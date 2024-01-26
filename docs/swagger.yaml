@@ -1,0 +1,61 @@
+basePath: /v1
+definitions:
+  main.LastFmResponse:
+    properties:
+      tracks:
+        properties:
+          track:
+            items:
+              properties:
+                artist:
+                  type: string
+                image:
+                  items:
+                    properties:
+                      '#text':
+                        type: string
+                      size:
+                        type: string
+                    type: object
+                  type: array
+                name:
+                  type: string
+                url:
+                  type: string
+              type: object
+            type: array
+        type: object
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Your API description
+  termsOfService: Your API terms of service
+  title: Your API Title
+  version: "1.0"
+paths:
+  /toptracks:
+    get:
+      description: Get the top tracks for a given location and country
+      parameters:
+      - description: Location name
+        in: query
+        name: location
+        required: true
+        type: string
+      - description: Country name
+        in: query
+        name: country
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.LastFmResponse'
+      summary: Get top tracks for a location
+      tags:
+      - tracks
+swagger: "2.0"
