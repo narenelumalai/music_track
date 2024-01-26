@@ -1,2 +1,2 @@
-To Execute the code rum the below command
+To Execute the code run the below command
 go run main.go
